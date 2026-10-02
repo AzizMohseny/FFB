@@ -13,9 +13,10 @@ Despite OpenType solving nearly all technical challenges of Arabic script, the n
 ## Status
 
 - ✅ Anchor synchronization — functional
-- 🔄 GSUB generation — in development
-- 🔄 Alternates system — in development
-- 🔄 Automatic kerning — in development
+- ✅ GSUB generation — functional
+- ✅ GPOS generation (mark, mkmk, cursive) — functional
+- 🔄 Alternates system (calt, rclt, jalt, falt) — in development
+- 🔄 Automatic kerning for dots and diacritics — in development
 
 ## Live Tool
 
