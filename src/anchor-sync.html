@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anchor Sync — FFB</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --ink: #1c1a17;
+    --sub: #6b645a;
+    --accent: #8a5a36;
+    --line: #ddd6cb;
+    --panel: #ffffff;
+    --ok: #2e6b3e;
+    --warn: #9a5a1a;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17140f; --ink: #f1ece2; --sub: #b7ae9e; --accent: #d59a63;
+      --line: #3a352c; --panel: #201c16; --ok: #6fbf7f; --warn: #e0a24a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17140f; --ink: #f1ece2; --sub: #b7ae9e; --accent: #d59a63;
+    --line: #3a352c; --panel: #201c16; --ok: #6fbf7f; --warn: #e0a24a;
+  }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
+    line-height: 1.8;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 32px 20px 60px; }
+  h1 { font-size: 1.5rem; margin: 0 0 6px; }
+  .lead { color: var(--sub); margin: 0 0 32px; font-size: 0.95rem; }
+  .step {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 20px; margin-bottom: 18px;
+  }
+  .step h2 {
+    font-size: 1rem; margin: 0 0 12px; display: flex; align-items: center; gap: 10px;
+  }
+  .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%; background: var(--accent);
+    color: #fff; font-size: 0.8rem; flex-shrink: 0;
+  }
+  input[type=file] {
+    width: 100%; padding: 10px; border: 1px dashed var(--line); border-radius: 8px;
+    background: transparent; color: var(--ink); font-family: inherit;
+  }
+  .filename { font-size: 0.85rem; color: var(--sub); margin-top: 6px; min-height: 1.2em; }
+  button {
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    padding: 12px 22px; font-size: 1rem; font-family: inherit; cursor: pointer;
+    width: 100%;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.secondary { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+  #report {
+    display: none; margin-top: 18px; padding: 16px; border-radius: 8px;
+    background: var(--bg); border: 1px solid var(--line); font-size: 0.9rem;
+    white-space: pre-wrap; direction: ltr; text-align: left; font-family: Consolas, monospace;
+    max-height: 260px; overflow-y: auto;
+  }
+  #summary { font-family: inherit; direction: ltr; text-align: left; margin-bottom: 10px; }
+  #summary b.ok { color: var(--ok); }
+  #summary b.warn { color: var(--warn); }
+  .actions { display: flex; gap: 10px; margin-top: 14px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Anchor Sync — FFB</h1>
+  <p class="lead">Reads the current anchor coordinates from a UFO file and writes them into the GPOS feature file, without changing the structure.</p>
+
+  <div class="step">
+    <h2><span class="num">1</span> UFO file (as .zip)</h2>
+    <p class="lead" style="margin:0 0 10px;">The GPOS feature file is extracted from the same UFO — no separate file needed.</p>
+    <input type="file" id="ufoInput" accept=".zip">
+    <div class="filename" id="ufoName"></div>
+  </div>
+
+  <div class="step">
+    <button id="runBtn" disabled>Synchronize</button>
+    <div id="report"></div>
+    <div class="hidden" id="resultBox" style="margin-top:14px;">
+      <label style="font-size:0.85rem;color:var(--sub);display:block;margin-bottom:6px;">Result (you can copy directly from here):</label>
+      <textarea id="resultArea" readonly style="width:100%;height:220px;direction:ltr;text-align:left;font-family:Consolas,monospace;font-size:0.85rem;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);"></textarea>
+      <div class="actions" style="margin-top:10px;">
+        <button id="copyBtn" class="secondary">Copy all</button>
+        <button id="downloadBtn">Download file</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let ufoZip = null;
+let resultText = null;
+let resultFilename = "synced.fea";
+
+const ufoInput = document.getElementById('ufoInput');
+const runBtn = document.getElementById('runBtn');
+const reportEl = document.getElementById('report');
+const resultBox = document.getElementById('resultBox');
+const resultArea = document.getElementById('resultArea');
+const copyBtn = document.getElementById('copyBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+
+ufoInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  document.getElementById('ufoName').textContent = file.name;
+  resultFilename = file.name.replace(/\.zip$/i, '') + '.synced.fea';
+  try {
+    ufoZip = await JSZip.loadAsync(file);
+    runBtn.disabled = false;
+  } catch (err) {
+    document.getElementById('ufoName').textContent = 'Error reading zip: ' + err.message;
+    ufoZip = null;
+    runBtn.disabled = true;
+  }
+});
+
+function parseAnchorsFromGlif(xmlText) {
+  const doc = new DOMParser().parseFromString(xmlText, "application/xml");
+  const glyphEl = doc.querySelector('glyph');
+  if (!glyphEl) return null;
+  const name = glyphEl.getAttribute('name');
+  const anchors = [];
+  doc.querySelectorAll('anchor').forEach(a => {
+    const aname = a.getAttribute('name');
+    if (!aname) return;
+    anchors.push({
+      name: aname,
+      x: parseFloat(a.getAttribute('x') || '0'),
+      y: parseFloat(a.getAttribute('y') || '0'),
+    });
+  });
+  return { name, anchors };
+}
+
+async function buildAnchorMap(zip) {
+  const map = new Map();
+  const glifPaths = Object.keys(zip.files).filter(p => /\/glyphs\/[^/]+\.glif$/i.test(p) && !zip.files[p].dir);
+  for (const path of glifPaths) {
+    const text = await zip.files[path].async('string');
+    const parsed = parseAnchorsFromGlif(text);
+    if (!parsed || !parsed.name) continue;
+    for (const a of parsed.anchors) {
+      map.set(parsed.name + "\u0000" + a.name, { x: a.x, y: a.y });
+    }
+  }
+  return map;
+}
+
+function findFeaturesFile(zip) {
+  const path = Object.keys(zip.files).find(p => /(^|\/)features\.fea$/i.test(p) && !zip.files[p].dir);
+  return path || null;
+}
+
+function syncFeaText(text, anchorMap) {
+  let updated = 0;
+  const missing = [];
+
+  const markClassRe = /(markClass\s+(\S+)\s+<anchor\s+)(-?\d+)\s+(-?\d+)(>\s*@(\w+)\s*;)/g;
+  text = text.replace(markClassRe, (m, prefix, glyph, ox, oy, suffix, slot) => {
+    const key = glyph + "\u0000" + "_" + slot;
+    if (!anchorMap.has(key)) { missing.push(glyph + " : _" + slot); return m; }
+    const { x, y } = anchorMap.get(key);
+    updated++;
+    return prefix + Math.round(x) + " " + Math.round(y) + suffix;
+  });
+
+  const posBaseRe = /(pos\s+(?:base|mark)\s+(\S+)\s+<anchor\s+)(-?\d+)\s+(-?\d+)(>\s*mark\s*@(\w+))/g;
+  text = text.replace(posBaseRe, (m, prefix, glyph, ox, oy, suffix, slot) => {
+    const key = glyph + "\u0000" + slot;
+    if (!anchorMap.has(key)) { missing.push(glyph + " : " + slot); return m; }
+    const { x, y } = anchorMap.get(key);
+    updated++;
+    return prefix + Math.round(x) + " " + Math.round(y) + suffix;
+  });
+
+  return { text, updated, missing };
+}
+
+runBtn.addEventListener('click', async () => {
+  runBtn.disabled = true;
+  runBtn.textContent = 'Processing...';
+  reportEl.style.display = 'block';
+  resultBox.classList.add('hidden');
+  try {
+    const featuresPath = findFeaturesFile(ufoZip);
+    if (!featuresPath) {
+      reportEl.innerHTML = '<b class="warn">features.fea not found inside this UFO.</b> Make sure the zip contains a .ufo folder with features.fea inside.';
+      runBtn.disabled = false;
+      runBtn.textContent = 'Synchronize';
+      return;
+    }
+    const feaText = await ufoZip.files[featuresPath].async('string');
+    const anchorMap = await buildAnchorMap(ufoZip);
+    const { text, updated, missing } = syncFeaText(feaText, anchorMap);
+    resultText = text;
+
+    let summary = `<div id="summary"><b class="ok">${updated}</b> anchor value(s) updated.`;
+    if (missing.length) {
+      summary += ` <b class="warn">${missing.length}</b> item(s) not found in UFO (left unchanged).`;
+    }
+    summary += `</div>`;
+    let detail = missing.length ? "Missing items:\n" + missing.map(m => "  - " + m).join("\n") : "";
+    reportEl.innerHTML = summary + (detail ? `<div>${detail.replace(/\n/g,'<br>')}</div>` : '');
+
+    resultArea.value = resultText;
+    resultBox.classList.remove('hidden');
+  } catch (err) {
+    reportEl.innerHTML = '<b class="warn">Error:</b> ' + err.message;
+  }
+  runBtn.disabled = false;
+  runBtn.textContent = 'Synchronize';
+});
+
+copyBtn.addEventListener('click', async () => {
+  resultArea.select();
+  try {
+    await navigator.clipboard.writeText(resultText);
+    copyBtn.textContent = 'Copied ✓';
+    setTimeout(() => copyBtn.textContent = 'Copy all', 1500);
+  } catch (e) {
+    // selection alone lets the user press Ctrl+C manually
+  }
+});
+
+downloadBtn.addEventListener('click', () => {
+  if (!resultText) return;
+  const blob = new Blob([resultText], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = resultFilename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
