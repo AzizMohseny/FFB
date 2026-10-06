@@ -1,0 +1,27 @@
+## How to Use FFB
+
+FFB currently works with one font: the FFB Master Font.
+
+### Step 1: Download the master font
+
+Download `FFB-Master.ufo.zip` (or the compiled versions) from the `master-font/` folder.
+
+### Step 2: Open it in your font editor
+
+Open the master font in FontForge, Glyphs, or any editor that supports UFO.
+
+### Step 3: Draw your glyphs and set the anchors
+
+Replace the skeletons with your own letterforms. Set the anchors on your glyphs.
+
+### Step 4: Export as UFO
+
+Export your font as a UFO. Then zip the UFO folder.
+
+### Step 5: Run FFB
+
+Upload the zipped UFO to FFB. The tool will generate the GSUB/GPOS feature file automatically.
+
+### Step 6: Import the features
+
+Import the generated `.fea` file back into your font editor and compile.
