@@ -1,0 +1,57 @@
+@calt = [alefabove-ar dotaboveSymbol-ar dotbelowSymbol-ar twodotshorizontalaboveSymbol-ar twodotshorizontalbelowSymbol-ar threedotsupaboveSymbol-ar threedotsupbelowSymbol-ar threedotsdownaboveSymbol-ar threedotsdownbelowSymbol-ar fourdotsaboveSymbol-ar fourdotsbelowSymbol-ar doubleverticalbarbelowSymbol-ar twodotsverticalaboveSymbol-ar twodotsverticalbelowSymbol-ar ringSymbol-ar tahaboveSymbol-ar tahbelowSymbol-ar fathatan-ar dammatan-ar kasratan-ar];
+@calt2 = [H-twodotbelow.mrk threedotbelow.mrk alefabove-ar dotaboveSymbol-ar dotbelowSymbol-ar twodotshorizontalaboveSymbol-ar twodotshorizontalbelowSymbol-ar threedotsupaboveSymbol-ar threedotsupbelowSymbol-ar threedotsdownaboveSymbol-ar threedotsdownbelowSymbol-ar fourdotsaboveSymbol-ar fourdotsbelowSymbol-ar doubleverticalbarbelowSymbol-ar twodotsverticalaboveSymbol-ar twodotsverticalbelowSymbol-ar ringSymbol-ar tahaboveSymbol-ar tahbelowSymbol-ar fathatan-ar dammatan-ar kasratan-ar];
+@calt3 = [V-twodotbelow.mrk threedotbelow.mrk.ss01 alefabove.mrk dotabove.mrk dotbelow.mrk H-twodotabove.mrk H-twodotbelow.mrk threedotabove.mrk threedotbelow.mrk R-threedotabove.mrk R-threedotbelow.mrk fourdotabove.mrk fourdotbelow.mrk V-twodotbelow.mrk V-twodotabove.mrk V-twodotbelow.mrk ring.mrk tahabove.mrk tahbelow.mrk fathatan.mrk dammatan.mrk kasratan.mrk];
+@calt5 = [alef.fina.skl behDotless.init.skl behDotless.medi.skl hah.init.skl hah.medi.skl seen.init.skl seen.medi.skl sad.init.skl sad.medi.skl tah.init.skl tah.medi.skl ain.init.skl ain.medi.skl keheh.init.skl keheh.medi.skl lam.init.skl lam.medi.skl meem.init.skl meem.medi.skl heh.init.skl heh.medi.skl fehDotless.init.skl fehDotless.medi.skl];
+@calt6 = [alef.fina.skl.ss01];
+
+feature calt {
+# GSUB feature: Contextual Alternates
+# Lookups: 2
+
+  sub @calt' by [alefabove.mrk dotabove.mrk dotbelow.mrk H-twodotabove.mrk H-twodotbelow.mrk threedotabove.mrk threedotbelow.mrk R-threedotabove.mrk R-threedotbelow.mrk fourdotabove.mrk fourdotbelow.mrk V-twodotbelow.mrk V-twodotabove.mrk V-twodotbelow.mrk ring.mrk tahabove.mrk tahbelow.mrk fathatan.mrk dammatan.mrk kasratan.mrk];
+    sub behDotless.init.skl' H-twodotbelow.mrk' kashida-ar space by yeh.isol.skl.ss02;
+    sub behDotless.medi.skl' H-twodotbelow.mrk' kashida-ar space by yeh.fina.skl.ss02;
+    sub lam.init.skl' lam.medi.skl shadda.mrk heh.fina.skl by lam.init.skl.ss01;
+    sub lam.init.skl.ss01 lam.medi.skl' shadda.mrk heh.fina.skl by lam.medi.skl.ss01;
+    sub lam.init.skl.ss01 lam.medi.skl.ss01 shadda.mrk' heh.fina.skl by .notdef;
+    sub lam.init.skl.ss01 lam.medi.skl.ss01 .notdef heh.fina.skl' by heh.fina.skl.ss01;
+
+lookup caltswash {
+        lookupflag IgnoreMarks;
+    sub seen.init.skl' kashida-ar space by  seen.isol.skl.ss02;
+    sub [keheh.medi.skl keheh.init.skl]' kashida-ar space by [kafswash.fina.skl kafswash.isol.skl];
+    sub [keheh.init.skl keheh.medi.skl]' kashida-ar by [kafswash.init.skl kafswash.medi.skl];
+    sub behDotless.init.skl' kashida-ar by behDotless.init.skl.ss02;
+
+
+}caltswash;
+
+
+
+  lookup calt_3 {
+  # GSUB lookup 7, type 16 (Chaining Context)
+    lookupflag IgnoreMarks;
+    sub [lam.init.skl lam.medi.skl] alef.fina.skl' by alef.fina.skl.ss01;
+    sub [behDotless.init.skl seen.init.skl]' kashida-ar by [behDotless.init.skl.ss02 seen.init.skl.ss02];
+
+  } calt_3;
+
+  
+} calt;
+
+feature kern {
+  lookup kern_withBase {
+   	pos [threedotbelow.mrk H-twodotbelow.mrk V-twodotbelow.mrk dotbelow.mrk R-threedotbelow.mrk]  yeh.fina.skl <50 -350 0 0>;
+   	pos [threedotbelow.mrk H-twodotbelow.mrk V-twodotbelow.mrk dotbelow.mrk R-threedotbelow.mrk]  alef.fina.skl <-100 0 0 0>;
+
+
+  } kern_withBase;
+
+  lookup kern_ignoreBase {
+
+    lookupflag IgnoreBaseGlyphs;
+
+    #pos threedotbelow.mrk dotabove.mrk <-100 -5 0 0>;
+
+  } kern_ignoreBase;
+} kern;
