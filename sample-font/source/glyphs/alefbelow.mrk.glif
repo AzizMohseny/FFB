@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="alefbelow.mrk" format="2">
+  <advance width="1"/>
+  <anchor x="0" y="368" name="_B.mrk"/>
+  <anchor x="-4" y="-52" name="B"/>
+  <anchor x="0" y="368" name="_B"/>
+  <outline>
+    <contour>
+      <point x="-43" y="321" type="curve" smooth="yes"/>
+      <point x="-14" y="231"/>
+      <point x="-14" y="164"/>
+      <point x="-14" y="104" type="curve" smooth="yes"/>
+      <point x="-14" y="98"/>
+      <point x="-10" y="94"/>
+      <point x="-4" y="94" type="curve" smooth="yes"/>
+      <point x="2" y="94"/>
+      <point x="6" y="98"/>
+      <point x="6" y="104" type="curve" smooth="yes"/>
+      <point x="6" y="164"/>
+      <point x="6" y="235"/>
+      <point x="-25" y="327" type="curve"/>
+      <point x="-26" y="332"/>
+      <point x="-32" y="335"/>
+      <point x="-37" y="333" type="curve" smooth="yes"/>
+      <point x="-42" y="332"/>
+      <point x="-45" y="326"/>
+    </contour>
+  </outline>
+  <lib>
+  <dict>
+  <key>public.markColor</key>
+  <string>0.999,1,0.6,1</string>
+  </dict>
+  </lib>
+</glyph>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dollar" format="2">
+  <advance width="843"/>
+  <unicode hex="0024"/>
+  <outline>
+    <component base="S" xScale="0.916159" yScale="0.916159" xOffset="-26" yOffset="30"/>
+    <contour>
+      <point x="331" y="1008" type="curve" smooth="yes"/>
+      <point x="331" y="884" type="line" smooth="yes"/>
+      <point x="331" y="878"/>
+      <point x="335" y="874"/>
+      <point x="341" y="874" type="curve" smooth="yes"/>
+      <point x="347" y="874"/>
+      <point x="351" y="878"/>
+      <point x="351" y="884" type="curve" smooth="yes"/>
+      <point x="351" y="1008" type="line" smooth="yes"/>
+      <point x="351" y="1014"/>
+      <point x="347" y="1018"/>
+      <point x="341" y="1018" type="curve" smooth="yes"/>
+      <point x="335" y="1018"/>
+      <point x="331" y="1014"/>
+    </contour>
+    <contour>
+      <point x="331" y="13" type="curve" smooth="yes"/>
+      <point x="331" y="-112" type="line" smooth="yes"/>
+      <point x="331" y="-118"/>
+      <point x="335" y="-122"/>
+      <point x="341" y="-122" type="curve" smooth="yes"/>
+      <point x="347" y="-122"/>
+      <point x="351" y="-118"/>
+      <point x="351" y="-112" type="curve" smooth="yes"/>
+      <point x="351" y="13" type="line" smooth="yes"/>
+      <point x="351" y="19"/>
+      <point x="347" y="23"/>
+      <point x="341" y="23" type="curve" smooth="yes"/>
+      <point x="335" y="23"/>
+      <point x="331" y="19"/>
+    </contour>
+  </outline>
+  <lib>
+  <dict>
+  <key>public.markColor</key>
+  <string>1,0.6,0.994,1</string>
+  <key>public.postscript.hints</key>
+  <dict>
+    <key>formatVersion</key>
+    <string>1</string>
+    <key>id</key>
+    <string>68976d7fbc909874257bd4251f3d0fe1a01faa05f7713e71130062f7b2c423ccac55cb1a48547efda59ecad4760c1fd88957fe91a6a0e162313bd9d545764164</string>
+    <key>hintSetList</key>
+    <array>
+      <dict>
+        <key>stems</key>
+        <array>
+          <string>hstem -14.77 188.92</string>
+          <string>hstem -14.77 -20</string>
+          <string>hstem -9.59 -20</string>
+          <string>hstem 277.04 185.81</string>
+          <string>hstem 754.66 -20</string>
+          <string>hstem 756.73 -20</string>
+          <string>vstem 89.32 247.23</string>
+          <string>vstem 252.85 247.23</string>
+          <string>vstem 350.55 149.79</string>
+        </array>
+      </dict>
+    </array>
+  </dict>
+  </dict>
+  </lib>
+</glyph>

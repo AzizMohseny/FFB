@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="aboweyeh.mrk" format="2">
+  <anchor x="-2" y="-94" name="_T"/>
+  <anchor x="-2" y="-94" name="_T.1"/>
+  <outline>
+    <contour>
+      <point x="111" y="232" type="curve" smooth="yes"/>
+      <point x="-47" y="212"/>
+      <point x="-76" y="68"/>
+      <point x="27" y="65" type="curve" smooth="yes"/>
+      <point x="121" y="62"/>
+      <point x="58" y="-63"/>
+      <point x="-117" y="-19" type="curve" smooth="yes"/>
+      <point x="-122" y="-18"/>
+      <point x="-127" y="-21"/>
+      <point x="-129" y="-27" type="curve" smooth="yes"/>
+      <point x="-130" y="-32"/>
+      <point x="-127" y="-37"/>
+      <point x="-121" y="-39" type="curve" smooth="yes"/>
+      <point x="92" y="-92"/>
+      <point x="148" y="81"/>
+      <point x="27" y="85" type="curve" smooth="yes"/>
+      <point x="-53" y="88"/>
+      <point x="-11" y="196"/>
+      <point x="113" y="212" type="curve" smooth="yes"/>
+      <point x="119" y="213"/>
+      <point x="123" y="218"/>
+      <point x="122" y="223" type="curve" smooth="yes"/>
+      <point x="121" y="229"/>
+      <point x="116" y="233"/>
+    </contour>
+  </outline>
+  <lib>
+  <dict>
+  <key>public.markColor</key>
+  <string>0.999,1,0.6,1</string>
+  </dict>
+  </lib>
+</glyph>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="alef.fina.skl.ss01" format="2">
+  <advance width="243"/>
+  <anchor x="352" y="0" name="B"/>
+  <anchor x="128" y="1182" name="T"/>
+  <anchor x="384" y="75" name="_E"/>
+  <outline>
+    <contour>
+      <point x="-21" y="1112" type="curve" smooth="yes"/>
+      <point x="113" y="841"/>
+      <point x="282" y="471"/>
+      <point x="329" y="366" type="curve" smooth="yes"/>
+      <point x="384" y="242"/>
+      <point x="450" y="85"/>
+      <point x="244" y="85" type="curve" smooth="yes"/>
+      <point x="152" y="85" type="line" smooth="yes"/>
+      <point x="146" y="85"/>
+      <point x="142" y="81"/>
+      <point x="142" y="75" type="curve" smooth="yes"/>
+      <point x="142" y="69"/>
+      <point x="146" y="65"/>
+      <point x="152" y="65" type="curve" smooth="yes"/>
+      <point x="244" y="65" type="line" smooth="yes"/>
+      <point x="496" y="65"/>
+      <point x="385" y="289"/>
+      <point x="347" y="374" type="curve" smooth="yes"/>
+      <point x="300" y="479"/>
+      <point x="131" y="849"/>
+      <point x="-3" y="1120" type="curve" smooth="yes"/>
+      <point x="-5" y="1125"/>
+      <point x="-11" y="1127"/>
+      <point x="-16" y="1125" type="curve" smooth="yes"/>
+      <point x="-21" y="1123"/>
+      <point x="-23" y="1117"/>
+    </contour>
+  </outline>
+</glyph>

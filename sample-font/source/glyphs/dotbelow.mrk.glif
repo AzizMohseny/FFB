@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dotbelow.mrk" format="2">
+  <advance width="1"/>
+  <anchor x="0" y="102" name="_B.mrk"/>
+  <anchor x="0" y="102" name="_B"/>
+  <anchor x="0" y="-74" name="B"/>
+  <outline>
+    <component base="dotabove.mrk" xOffset="-7" yOffset="-42"/>
+  </outline>
+</glyph>
