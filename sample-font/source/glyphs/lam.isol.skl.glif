@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="lam.isol.skl" format="2">
+  <advance width="1191"/>
+  <anchor x="500" y="-215" name="B"/>
+  <anchor x="655" y="700" name="T"/>
+  <anchor x="1117" y="627" name="D"/>
+  <outline>
+    <contour>
+      <point x="1094" y="1200" type="curve" smooth="yes"/>
+      <point x="1109" y="445"/>
+      <point x="1111" y="314"/>
+      <point x="1120" y="-28" type="curve"/>
+      <point x="984" y="-80"/>
+      <point x="754" y="-159"/>
+      <point x="494" y="-137" type="curve" smooth="yes"/>
+      <point x="-25" y="-92"/>
+      <point x="-20" y="358"/>
+      <point x="257" y="609" type="curve" smooth="yes"/>
+      <point x="261" y="612"/>
+      <point x="261" y="619"/>
+      <point x="257" y="623" type="curve" smooth="yes"/>
+      <point x="254" y="627"/>
+      <point x="247" y="627"/>
+      <point x="243" y="623" type="curve" smooth="yes"/>
+      <point x="-48" y="360"/>
+      <point x="-43" y="-110"/>
+      <point x="492" y="-157" type="curve" smooth="yes"/>
+      <point x="762" y="-180"/>
+      <point x="998" y="-96"/>
+      <point x="1134" y="-44" type="curve" smooth="yes"/>
+      <point x="1138" y="-43"/>
+      <point x="1140" y="-39"/>
+      <point x="1140" y="-35" type="curve"/>
+      <point x="1131" y="317"/>
+      <point x="1129" y="445"/>
+      <point x="1114" y="1200" type="curve" smooth="yes"/>
+      <point x="1114" y="1206"/>
+      <point x="1109" y="1210"/>
+      <point x="1104" y="1210" type="curve" smooth="yes"/>
+      <point x="1098" y="1210"/>
+      <point x="1094" y="1205"/>
+    </contour>
+  </outline>
+</glyph>

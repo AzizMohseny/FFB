@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="lamDoublebar.isol.skl" format="2">
+  <advance width="1191"/>
+  <anchor x="500" y="-215" name="B"/>
+  <anchor x="655" y="700" name="T"/>
+  <anchor x="1117" y="627" name="D"/>
+  <outline>
+    <component base="lam.isol.skl"/>
+    <component base="bar.mrk" xOffset="1139" yOffset="742"/>
+    <component base="bar.mrk" xOffset="1139" yOffset="644"/>
+  </outline>
+  <lib>
+  <dict>
+  <key>com.fontlab.recipe</key>
+  <string>lam.isol.skl</string>
+  </dict>
+  </lib>
+</glyph>

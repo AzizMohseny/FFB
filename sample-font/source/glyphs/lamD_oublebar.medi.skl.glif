@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="lamDoublebar.medi.skl" format="2">
+  <advance width="570"/>
+  <anchor x="204" y="0" name="B"/>
+  <anchor x="295" y="1261" name="T"/>
+  <anchor x="299" y="649" name="D"/>
+  <anchor x="569" y="75" name="_E"/>
+  <anchor x="0" y="75" name="E"/>
+  <outline>
+    <component base="lam.medi.skl"/>
+    <component base="bar.mrk" xOffset="293" yOffset="742"/>
+    <component base="bar.mrk" xOffset="293" yOffset="644"/>
+  </outline>
+  <lib>
+  <dict>
+  <key>com.fontlab.recipe</key>
+  <string>lam.medi.skl</string>
+  </dict>
+  </lib>
+</glyph>

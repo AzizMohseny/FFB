@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="kafswash.medi.skl" format="2">
+  <advance width="1426"/>
+  <anchor x="697" y="0" name="B"/>
+  <anchor x="483" y="700" name="T"/>
+  <anchor x="880" y="685" name="R"/>
+  <anchor x="326" y="559" name="S"/>
+  <anchor x="1426" y="75" name="_E"/>
+  <anchor x="0" y="75" name="E"/>
+  <outline>
+    <component base="kafswash.init.skl"/>
+  </outline>
+</glyph>

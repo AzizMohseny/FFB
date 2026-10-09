@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="lamDoublebar.fina.skl" format="2">
+  <advance width="1393"/>
+  <anchor x="595" y="-235" name="B"/>
+  <anchor x="595" y="700" name="T"/>
+  <anchor x="1118" y="490" name="D"/>
+  <anchor x="1396" y="75" name="_E"/>
+  <outline>
+    <component base="lam.fina.skl"/>
+    <component base="bar.mrk" xOffset="1139" yOffset="756"/>
+    <component base="bar.mrk" xOffset="1139" yOffset="658"/>
+  </outline>
+  <lib>
+  <dict>
+  <key>com.fontlab.recipe</key>
+  <string>lam.fina.skl</string>
+  </dict>
+  </lib>
+</glyph>
