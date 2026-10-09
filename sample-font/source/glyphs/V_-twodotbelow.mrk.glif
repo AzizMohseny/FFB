@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="V-twodotbelow.mrk" format="2">
+  <anchor x="0" y="453" name="_B.mrk"/>
+  <anchor x="0" y="145" name="B"/>
+  <anchor x="0" y="453" name="_B"/>
+  <outline>
+    <component base="V-twodotabove.mrk" yOffset="199"/>
+  </outline>
+</glyph>

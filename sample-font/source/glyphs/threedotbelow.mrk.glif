@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="threedotbelow.mrk" format="2">
+  <advance width="1"/>
+  <anchor x="0" y="175" name="_B.mrk"/>
+  <anchor x="0" y="-88" name="B"/>
+  <anchor x="0" y="179" name="_B"/>
+  <outline>
+    <component base="threedotbelow.mrk.ss01" xOffset="12" yOffset="48"/>
+  </outline>
+</glyph>

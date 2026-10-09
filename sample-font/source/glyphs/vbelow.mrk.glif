@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="vbelow.mrk" format="2">
+  <anchor x="0" y="273" name="_B.mek"/>
+  <anchor x="0" y="273" name="_B"/>
+  <anchor x="0" y="-74" name="B"/>
+  <outline>
+    <component base="vabove.mrk" xOffset="-1" yOffset="-36"/>
+  </outline>
+  <lib>
+  <dict>
+  <key>public.markColor</key>
+  <string>0.999,1,0.6,1</string>
+  </dict>
+  </lib>
+</glyph>

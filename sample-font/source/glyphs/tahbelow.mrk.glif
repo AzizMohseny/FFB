@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="tahbelow.mrk" format="2">
+  <anchor x="1" y="461" name="_B"/>
+  <anchor x="0" y="461" name="_B.mrk"/>
+  <anchor x="0" y="-42" name="B"/>
+  <outline>
+    <component base="tahabove.mrk" xOffset="6"/>
+  </outline>
+  <lib>
+  <dict>
+  <key>public.markColor</key>
+  <string>0.999,1,0.6,1</string>
+  </dict>
+  </lib>
+</glyph>

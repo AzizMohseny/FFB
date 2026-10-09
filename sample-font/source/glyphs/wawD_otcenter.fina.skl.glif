@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="wawDotcenter.fina.skl" format="2">
+  <advance width="516"/>
+  <anchor x="119" y="-335" name="B"/>
+  <anchor x="204" y="581" name="T"/>
+  <outline>
+    <component base="dotbelow.mrk" xOffset="105" yOffset="-11"/>
+    <component base="waw.fina.skl"/>
+  </outline>
+</glyph>

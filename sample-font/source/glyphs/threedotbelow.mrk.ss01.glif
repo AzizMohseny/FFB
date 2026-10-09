@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="threedotbelow.mrk.ss01" format="2">
+  <anchor x="0" y="111" name="_B"/>
+  <anchor x="0" y="111" name="_B.mrk"/>
+  <anchor x="0" y="-117" name="B"/>
+  <outline>
+    <component base="H-twodotabove.mrk" yOffset="6"/>
+    <component base="dotbelow.mrk" xScale="-1" xOffset="-9" yOffset="-50"/>
+  </outline>
+  <lib>
+  <dict>
+  <key>com.fontlab.recipe</key>
+  <string>threedotbelow.mrk</string>
+  </dict>
+  </lib>
+</glyph>

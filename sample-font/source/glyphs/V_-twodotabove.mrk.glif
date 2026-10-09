@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="V-twodotabove.mrk" format="2">
+  <advance width="1"/>
+  <anchor x="0" y="-6" name="_T.mrk"/>
+  <anchor x="0" y="-6" name="_T"/>
+  <anchor x="1" y="290" name="T"/>
+  <outline>
+    <component base="dotabove.mrk" xOffset="1" yOffset="-18"/>
+    <component base="dotabove.mrk" xOffset="1" yOffset="116"/>
+  </outline>
+</glyph>

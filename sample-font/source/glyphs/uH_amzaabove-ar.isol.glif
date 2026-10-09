@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uHamzaabove-ar.isol" format="2">
+  <advance width="523"/>
+  <outline>
+    <component base="waw.isol.skl" xOffset="-23"/>
+    <component base="hamza.mrk" xScale="0.7" yScale="0.7" xOffset="407" yOffset="560"/>
+    <component base="damma.mrk" xScale="0.7" yScale="0.7" xOffset="177" yOffset="549"/>
+  </outline>
+</glyph>
