@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="O" format="2">
+  <advance width="1052"/>
+  <unicode hex="004F"/>
+  <outline>
+    <contour>
+      <point x="565" y="38" type="curve" smooth="yes"/>
+      <point x="316" y="38"/>
+      <point x="129" y="221"/>
+      <point x="129" y="465" type="curve" smooth="yes"/>
+      <point x="129" y="710"/>
+      <point x="316" y="891"/>
+      <point x="565" y="891" type="curve" smooth="yes"/>
+      <point x="813" y="891"/>
+      <point x="997" y="710"/>
+      <point x="997" y="465" type="curve" smooth="yes"/>
+      <point x="997" y="224"/>
+      <point x="807" y="38"/>
+    </contour>
+    <contour>
+      <point x="565" y="18" type="curve" smooth="yes"/>
+      <point x="817" y="18"/>
+      <point x="1017" y="212"/>
+      <point x="1017" y="465" type="curve" smooth="yes"/>
+      <point x="1017" y="722"/>
+      <point x="823" y="911"/>
+      <point x="565" y="911" type="curve" smooth="yes"/>
+      <point x="306" y="911"/>
+      <point x="109" y="722"/>
+      <point x="109" y="465" type="curve" smooth="yes"/>
+      <point x="109" y="209"/>
+      <point x="306" y="18"/>
+    </contour>
+  </outline>
+  <lib>
+  <dict>
+  <key>com.fontlab.metricsRight</key>
+  <string>=35</string>
+  <key>public.markColor</key>
+  <string>0.6,0.997,1,1</string>
+  <key>public.postscript.hints</key>
+  <dict>
+    <key>formatVersion</key>
+    <string>1</string>
+    <key>id</key>
+    <string>52243681fe5e6511c897197484108883701a41b887aa7e95ea1ab5e15d28e1acde5d709ba561c09c5497c1ca369a35d08231c9115e464e0cf371b381420af654</string>
+    <key>hintSetList</key>
+    <array>
+      <dict>
+        <key>stems</key>
+        <array>
+          <string>hstem -20.32 240.72</string>
+          <string>hstem 661.83 240.72</string>
+          <string>vstem -179.52 300.13</string>
+          <string>vstem 816.61 300.13</string>
+        </array>
+      </dict>
+    </array>
+  </dict>
+  </dict>
+  </lib>
+</glyph>

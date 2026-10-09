@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="rehDotbelowdotabove.fina.skl" format="2">
+  <advance width="676"/>
+  <anchor x="69" y="-312" name="B"/>
+  <anchor x="239" y="606" name="T"/>
+  <anchor x="677" y="75" name="_E"/>
+  <outline>
+    <component base="reh.fina.skl"/>
+    <component base="dotabove.mrk" xOffset="-18" yOffset="-65"/>
+  </outline>
+</glyph>

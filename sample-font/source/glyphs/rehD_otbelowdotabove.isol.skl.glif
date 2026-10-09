@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="rehDotbelowdotabove.isol.skl" format="2">
+  <advance width="441"/>
+  <anchor x="99" y="-310" name="B"/>
+  <anchor x="240" y="583" name="T"/>
+  <outline>
+    <component base="dotabove.mrk" xOffset="4" yOffset="-34"/>
+    <contour>
+      <point x="-73" y="-280" type="curve" smooth="yes"/>
+      <point x="367" y="-74"/>
+      <point x="368" y="222"/>
+      <point x="265" y="503" type="curve"/>
+      <point x="264" y="509"/>
+      <point x="258" y="511"/>
+      <point x="253" y="509" type="curve"/>
+      <point x="247" y="508"/>
+      <point x="245" y="502"/>
+      <point x="247" y="497" type="curve" smooth="yes"/>
+      <point x="346" y="222"/>
+      <point x="347" y="-62"/>
+      <point x="-81" y="-262" type="curve" smooth="yes"/>
+      <point x="-86" y="-264"/>
+      <point x="-88" y="-270"/>
+      <point x="-86" y="-275" type="curve" smooth="yes"/>
+      <point x="-84" y="-280"/>
+      <point x="-78" y="-282"/>
+    </contour>
+  </outline>
+</glyph>

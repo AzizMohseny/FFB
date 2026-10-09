@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="R-threedotabove.mrk" format="2">
+  <advance width="1"/>
+  <anchor x="0" y="21" name="_T.mrk"/>
+  <anchor x="0" y="21" name="_T"/>
+  <anchor x="0" y="351" name="T"/>
+  <outline>
+    <component base="threedotbelow.mrk" xScale="-1" xOffset="-13" yOffset="115"/>
+  </outline>
+</glyph>

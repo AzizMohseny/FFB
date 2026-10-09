@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="reh.isol.skl" format="2">
+  <advance width="412"/>
+  <anchor x="0" y="-335" name="B"/>
+  <anchor x="130" y="660" name="t.fatha.mrk"/>
+  <anchor x="178" y="75" name="D"/>
+  <anchor x="-34" y="30" name="R"/>
+  <outline>
+    <contour>
+      <point x="-181" y="-280" type="curve" smooth="yes"/>
+      <point x="259" y="-74"/>
+      <point x="260" y="222"/>
+      <point x="157" y="503" type="curve"/>
+      <point x="156" y="509"/>
+      <point x="150" y="511"/>
+      <point x="145" y="509" type="curve"/>
+      <point x="139" y="508"/>
+      <point x="137" y="502"/>
+      <point x="139" y="497" type="curve" smooth="yes"/>
+      <point x="238" y="222"/>
+      <point x="239" y="-62"/>
+      <point x="-189" y="-262" type="curve" smooth="yes"/>
+      <point x="-194" y="-264"/>
+      <point x="-196" y="-270"/>
+      <point x="-194" y="-275" type="curve" smooth="yes"/>
+      <point x="-192" y="-280"/>
+      <point x="-186" y="-282"/>
+    </contour>
+  </outline>
+</glyph>
