@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="fourdotabove.mrk" format="2">
+  <anchor x="0" y="18" name="_T.mrk"/>
+  <anchor x="0" y="16" name="_T"/>
+  <anchor x="-2" y="343" name="T"/>
+  <outline>
+    <component base="H-twodotbelow.mrk" xOffset="-1" yOffset="129"/>
+    <component base="H-twodotbelow.mrk" xOffset="-1" yOffset="270"/>
+  </outline>
+</glyph>

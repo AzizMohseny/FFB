@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="H-twodotbelow.mrk" format="2">
+  <anchor x="-1" y="70" name="_B.mrk"/>
+  <anchor x="-1" y="70" name="_B"/>
+  <anchor x="1" y="-141" name="B"/>
+  <outline>
+    <component base="H-twodotabove.mrk" xOffset="-1" yOffset="-90"/>
+  </outline>
+</glyph>

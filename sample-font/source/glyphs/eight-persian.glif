@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="eight-persian" format="2">
+  <advance width="857"/>
+  <unicode hex="06F8"/>
+  <outline>
+    <component base="seven-ar" xScale="1.00726" yScale="-1.00726" xOffset="14" yOffset="964"/>
+  </outline>
+  <lib>
+  <dict>
+  <key>com.fontlab.recipe</key>
+  <string>seven-ar</string>
+  </dict>
+  </lib>
+</glyph>

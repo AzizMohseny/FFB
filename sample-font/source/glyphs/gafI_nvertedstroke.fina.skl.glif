@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="gafInvertedstroke.fina.skl" format="2">
+  <advance width="1886"/>
+  <anchor x="535" y="-38" name="B"/>
+  <anchor x="1085" y="1007" name="T"/>
+  <anchor x="1590" y="977" name="R"/>
+  <anchor x="1109" y="870" name="S"/>
+  <anchor x="1886" y="75" name="_E"/>
+  <outline>
+    <component base="keheh.fina.skl" xOffset="8"/>
+    <component base="sarkesh.mrk" xOffset="1393" yOffset="730"/>
+  </outline>
+  <lib>
+  <dict>
+  <key>com.fontlab.recipe</key>
+  <string>keheh.fina.skl</string>
+  </dict>
+  </lib>
+</glyph>

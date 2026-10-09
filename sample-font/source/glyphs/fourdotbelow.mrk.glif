@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="fourdotbelow.mrk" format="2">
+  <advance width="1"/>
+  <anchor x="1" y="383" name="_B.mrk"/>
+  <anchor x="0" y="32" name="B"/>
+  <anchor x="1" y="383" name="_B"/>
+  <outline>
+    <component base="fourdotabove.mrk" xOffset="1" yOffset="66"/>
+  </outline>
+</glyph>

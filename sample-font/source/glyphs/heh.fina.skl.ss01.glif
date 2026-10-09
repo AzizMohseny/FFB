@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="heh.fina.skl.ss01" format="2">
+  <advance width="750"/>
+  <anchor x="408" y="7" name="B"/>
+  <anchor x="606" y="624" name="T"/>
+  <anchor x="750" y="75" name="_E"/>
+  <outline>
+    <contour>
+      <point x="-60" y="374" type="curve" smooth="yes"/>
+      <point x="-26" y="168"/>
+      <point x="100" y="83"/>
+      <point x="189" y="83" type="curve" smooth="yes"/>
+      <point x="425" y="83"/>
+      <point x="293" y="543"/>
+      <point x="611" y="556" type="curve"/>
+      <point x="503" y="396"/>
+      <point x="447" y="65"/>
+      <point x="750" y="65" type="curve" smooth="yes"/>
+      <point x="756" y="65"/>
+      <point x="760" y="69"/>
+      <point x="760" y="75" type="curve" smooth="yes"/>
+      <point x="760" y="81"/>
+      <point x="756" y="85"/>
+      <point x="750" y="85" type="curve" smooth="yes"/>
+      <point x="443" y="85"/>
+      <point x="544" y="447"/>
+      <point x="650" y="574" type="curve"/>
+      <point x="649" y="577" type="line"/>
+      <point x="266" y="593"/>
+      <point x="410" y="103"/>
+      <point x="189" y="103" type="curve" smooth="yes"/>
+      <point x="112" y="103"/>
+      <point x="-8" y="178"/>
+      <point x="-40" y="378" type="curve" smooth="yes"/>
+      <point x="-41" y="383"/>
+      <point x="-46" y="387"/>
+      <point x="-52" y="386" type="curve" smooth="yes"/>
+      <point x="-57" y="385"/>
+      <point x="-61" y="380"/>
+    </contour>
+  </outline>
+</glyph>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="gafInvertedstroke.init.skl" format="2">
+  <advance width="525"/>
+  <anchor x="160" y="0" name="B"/>
+  <anchor x="150" y="846" name="T"/>
+  <anchor x="490" y="828" name="R"/>
+  <anchor x="1" y="710" name="S"/>
+  <anchor x="0" y="75" name="E"/>
+  <outline>
+    <component base="keheh.init.skl"/>
+    <component base="sarkesh.mrk" xOffset="286" yOffset="568"/>
+  </outline>
+  <lib>
+  <dict>
+  <key>com.fontlab.recipe</key>
+  <string>keheh.init.skl</string>
+  </dict>
+  </lib>
+</glyph>
