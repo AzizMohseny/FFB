@@ -63,4 +63,5 @@ docs/           article, user guide, specification
 
 ## License
 
-Code: MIT, see [LICENSE](LICENSE). The sample font has its own licence, see [sample-font/README.md](sample-font/README.md).
+Code: MIT, see [LICENSE](LICENSE). The sample font glyphs are proprietary and provided for demonstration
+only. See `FFB_Master.ufo/LICENSE.md` for the full license..
