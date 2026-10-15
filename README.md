@@ -1,67 +1,46 @@
-# FFB — Font Feature Builder
+# FFB (Font Feature Builder)
 
-Generate OpenType features for **decomposed ("skeleton + marks") Arabic-script fonts** from a UFO.
+**Building a standard infrastructure for line justification in complex scripts, based on OpenType**
 
-Encoded letters (e.g. `beh-ar`) stay empty. At run time GSUB replaces them with a dotless skeleton glyph plus mark glyphs, and GPOS positions the marks from anchors. The glyph count does not explode with every dotted letter, and the designer only draws skeletons, marks and anchors.
+---
 
-Read the idea and its background in [docs/article.md](docs/article.md). Step-by-step usage is in the [user guide (فارسی)](docs/user-guide.fa.md).
+## What is FFB?
 
-## What works today
+FFB is a new definition of non-Latin fonts with complex scripts that pursues several goals:
 
-| Feature | Tool |
-|---|---|
-| GSUB `isol/init/medi/fina` from a letter → skeleton + marks table | `extract_decompose_table.py`, `generate_gsub.py` |
-| GPOS `mark` and `mkmk` from anchors | `generate_gpos_mark.py` |
-| GPOS `curs` from `Ex` / `_Ex` anchors | `generate_curs.py` |
-| Rename FontLab-style anchor names to the convention | `normalize_anchors.py` |
-| Update anchor coordinates (`mark`, `mkmk`, `curs`) in an existing `.fea` from the UFO | `sync_anchor_coords.py`, or the browser tool `tools/anchor_sync_tool.html` (no install) |
-| UFO → `.otf` compiler (CFF) | `build_otf.py` |
-| Everything above in one command | `ffb.py` |
+**1. Preventing glyph explosion**
+By using a decomposed approach across three layers: **skeletons**, **marks**, and **anchors**. The role of anchors is to connect skeletons and marks.
 
-Planned: `calt`/`rclt`, automatic kerning, contextual mark shifts.
+**2. Automating font feature generation**
+Without dependence on any specific software or platform, using UFO files. Designers prepare their font in any platform they prefer and set the anchors. They then export a UFO file and submit it to FFB, which returns the font's features in a `.fea` file. This dramatically reduces the long and error-prone font production process and prepares the font with very high accuracy.
 
-## Quick start
+**3. Building infrastructure for line justification**
+One of the most persistent problems in OpenType is line justification in Arabic script. The `jalt` feature and the `JSTF` table were attempts in OpenType to define this at the font layer — but neither succeeded. The `ar-justify` library is another attempt to organize this at the text editor layer. But FFB has its own manifesto for this:
 
-```
-pip install fonttools
-python3 src/ffb.py MyFont.ufo --out build/
-```
+## The FFB Manifesto
 
-`MyFont.ufo` may be a folder or a `.zip`. Output: `build/MyFont.otf` plus the generated `.fea` files.
+**Justification is not the font's job. It is the text engine's job.**
 
-No command line? Use `tools/anchor_sync_tool.html`: open it in a browser (it needs an internet connection once, to load JSZip), drop in your UFO zip, and copy the updated feature code.
+**1. The Font's Responsibility: Providing Capacity**
+The font must provide alternate forms, controlled variation of forms, and the facilities needed to preserve the beauty and rules of calligraphy.
 
-## The FFB convention (what your font must follow)
+**2. The Justifier's Responsibility: Intelligent Decision-Making**
+The text engine must measure line length, evaluate the font's capacities, and decide on the location, type, and amount of change in the glyph.
 
-FFB is **not font-agnostic**: it reads names. Any font that follows these conventions works.
+**3. Beauty Over Mechanical Solutions**
+Line justification should not be achieved merely by increasing word spacing. Instead, it must adjust elongation according to calligraphic traditions and inject appropriate alternates into the line; then, if necessary, spacing should be adjusted within strict limits.
 
-- **Anchors on marks** start with `_` and name the slot they attach to; **anchors on bases** carry the slot name without `_`.
-  Slots: `Tm` (top mark), `Bm` (bottom mark), `ring`, `sarkesh`, `bar`.
-- **Cursive attachment:** `Ex` (exit) and `_Ex` (entry). `init` has `Ex` only, `medi` both, `fina` `_Ex` only, `isol` none.
-- A mark that has both `_Bm` and `Bm` hosts further marks and is routed to `mkmk`.
-- **Glyph names:** encoded letters `name-ar`; skeletons `name.isol|init|medi|fina.skl`; marks `name.mrk` (older exports: `name.mrk.skl`). The GPOS generators recognise marks by their `_` anchors, not by the suffix.
-- **Decomposition table:** one entry per encoded letter and form, see [examples/decompose_table.example.yaml](examples/decompose_table.example.yaml).
+**4. Releasing the JustyKhatt Library**
+Releasing an open-source JavaScript library called JustyKhatt that organizes text justification at the DOM layer for browsers.
 
-`normalize_anchors.py` renames the variants FontLab produces (`t.X.mrk.skl`, `b.X.mrk`, `m.ring.mrk`, `_T.mrk`, and the single-letter `T/B/D/R/S` slots) to the convention, and drops duplicate anchors that result.
+**5. Releasing a Master Font**
+Releasing a master font that demonstrates the full capacities of a font for justification.
 
-## Repository layout
+## Current Status
 
-```
-src/            the tools (Python)
-tools/          anchor_sync_tool.html — browser tool, no install
-templates/      simple_kern_template.fea
-examples/       example decomposition table
-sample-font/    FFB_Master.otf, its UFO source and the generated features
-docs/           article, user guide, specification
-```
-
-## Status and caveats
-
-- Validated on one font family so far. Reports from other designers are welcome.
-- Not yet resolved: reliable behaviour in Word/InDesign for every decomposed font, sukun on stacked marks (`mkmk`), and the planned features above.
-- `build_otf.py` is a small purpose-built compiler (CFF only). It needs closed outlines and refuses UFOs with open contours (single-line fonts). If you prefer, use the generated `.fea` files with your own pipeline (FontLab, ufo2ft, fontmake).
+- **FFB:** The core architecture works for Arabic. Anchor synchronization, GSUB, and GPOS (mark, mkmk, cursive) are functional. Alternates (calt, rclt, jalt, falt) and automatic kerning are in development.
+- **JustyKhatt:** In the design phase.
 
 ## License
 
-Code: MIT, see [LICENSE](LICENSE). The sample font glyphs are proprietary and provided for demonstration
-only. See `FFB_Master.ufo/LICENSE.md` for the full license..
+AGPL-3.0
