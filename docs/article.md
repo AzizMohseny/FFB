@@ -1,84 +1,201 @@
-# The Font Feature Builder (FFB): Treating Arabic Script as Skeletons, Marks and Anchors
+The Font Feature Builder (FFB)
 
-*Draft for discussion. Statements that are the author's opinion or estimate are marked as such.*
+Treating Arabic Script as Skeletons, Marks and Anchors
 
-## 1. Why fonts matter
+Project article  •  Draft for discussion
 
-Gutenberg's press combined several existing techniques. One could argue that its most distinctive contribution was the typeface: a reusable, systematic set of letterforms. Today fonts remain a largely invisible layer under every screen and printed page.
+Core principle  The font provides typographic resources; HarfBuzz shapes the text; JustyKatt makes line-justification decisions.
 
-Unicode and OpenType now let almost every written language be used on computers. Arabic script is one of the hardest to turn into a typeface, yet OpenType gives font makers most of the tools they need. Even so, Arabic-script type design remains thinly populated. As reported by Whitecliffe University of Applied Sciences, Google Fonts listed 52 Arabic families against 1,633 Latin families in June 2025, roughly 1 to 31 [1].
+Abstract
 
-## 2. Why Arabic typefaces are comparatively scarce
+Arabic script is one of the most complex writing systems to turn into a typeface. Despite Unicode and OpenType support, the number of Arabic-script font families remains small compared with Latin. This article introduces the Font Feature Builder (FFB), a generative approach that organizes a font into three layers—skeletons, marks and anchors—and uses that structure to generate OpenType tables. It also describes how those font resources can support a fourth concern: Arabic line justification. FFB operates in the font-production layer; it does not change character encoding and complements Unicode and OpenType. The accompanying JavaScript library, JustyKatt, treats justification as the responsibility of the text-layout layer rather than the font itself.
 
-Many factors contribute. The following are the author's assessment, not the result of a survey:
+1. Why fonts matter
 
-1. **Fragmented effort.** The Arabic-script world spans many countries and no shared body standardizes workflows, terminology or education.
-2. **Few specialized academic programs.** The author is not aware of dedicated postgraduate programs in Arabic type design. (This is an impression; it has not been systematically checked.)
-3. **Technical complexity of the script:**
-   - most letters have up to four contextual forms (isolated, initial, medial, final);
-   - a large share of the marks in the script are dots and diacritics that sit on or under other letters;
-   - the number of dots to position is high;
-   - letterforms change with their neighbours, following calligraphic tradition;
-   - several baselines can coexist in one line.
-4. **Weak economics.** Where intellectual-property protection is weak, it is hard to make a living from type design.
+Gutenberg’s principal invention was the font: a reusable, systematic set of letterforms. Today, fonts remain a largely invisible layer beneath every screen and printed page.
 
-## 3. A generative model that was proposed and not adopted
+Unicode and OpenType allow almost every written language to be used on computers. Arabic script remains particularly challenging to turn into a typeface, even though OpenType provides font makers with many of the necessary tools. Arabic-script type design is still comparatively underrepresented. Whitecliffe University of Applied Sciences reported that Google Fonts listed 52 Arabic families against 1,633 Latin families in June 2025—roughly a ratio of 1 to 31 [1].
 
-Unicode encodes Arabic letters as complete units. It also contains Arabic Presentation Forms blocks, which exist mainly for compatibility with legacy character sets and are not needed by modern shaping engines.
+2. Why Arabic typefaces are comparatively scarce
 
-In 2003 two documents proposed describing Arabic letters generatively, as skeletal base letters plus combining marks:
+The following factors are based on the author’s field observations. They are presented as working hypotheses, not as the results of a systematic survey.
 
-- J. Kew, *Encoding Arabic extensions: options for the future of Unicode*, February 2003 [2];
-- J. Kew, K. Mansour, M. Davis, *Proposal to encode productive Arabic-script modifier marks*, May 2003 [3]. It proposed 22 combining marks (dot patterns, small V, inverted V, ring, tah, bar) and one dotless base letter.
+Fragmented effort. The Arabic-script world spans many countries, and no shared body standardizes workflows, terminology or education.
 
-The Unicode Technical Committee did not adopt the approach. In a 2006 letter, Kew explains why: the benefit did not justify the cost of a change at that stage, normalization stability prevents giving existing letters new decompositions, and two ways to encode the same letter would create ambiguity and spoofing problems; he also states that many experts would have preferred the generative model [4]. The author of this article agrees with the technical idea of those proposals but accepts that the reasons given are real engineering constraints.
+Few specialized academic programs. As far as the author is aware, dedicated postgraduate programs in Arabic type design are rare or nonexistent. This impression has not been systematically checked.
 
-The consequence is that the generative model cannot live in the character encoding. It can still live in the font.
+Technical complexity of the script.
 
-## 4. The font layer
+Most letters have up to four contextual forms: isolated, initial, medial and final.
 
-Decomposed Arabic fonts are not new. Type designers in Iran, among others, have built fonts this way for years, but the method has not been documented as a reusable standard. FFB is an attempt to document it and to automate its repetitive parts.
+Many marks are dots and diacritics placed above or below letters.
+
+The number and arrangement of dots create substantial positioning work.
+
+Letterforms change according to their neighbours and calligraphic tradition.
+
+Several baselines can coexist within a single line.
+
+Weak economics. Where intellectual-property protection is weak, it can be difficult to make a living from type design.
+
+3. A generative model proposed but not adopted for encoding
+
+Unicode encodes Arabic letters as complete units. It also contains Arabic Presentation Forms blocks, which exist mainly for compatibility with legacy character sets and are not needed by modern shaping engines for ordinary text.
+
+In 2003, two documents proposed describing Arabic letters generatively, as skeletal base letters plus combining marks:
+
+J. Kew, *Encoding Arabic extensions: options for the future of Unicode*, February 2003 [2].
+
+J. Kew, K. Mansour and M. Davis, *Proposal to encode productive Arabic-script modifier marks*, May 2003 [3]. The proposal included 22 combining marks—dot patterns, small V, inverted V, ring, tah and bar—and one dotless base letter.
+
+The Unicode Technical Committee did not adopt this approach. In a 2006 letter, Kew explained that the benefits did not justify the cost of a change at that stage; normalization stability prevented assigning new decompositions to existing letters; and two ways to encode the same letter could create ambiguity and spoofing risks [4]. He also noted that many experts would have preferred the generative model. This article agrees with the technical idea while recognizing the engineering constraints.
+
+The consequence is that this generative model cannot be introduced into character encoding in the proposed way. It can, however, be implemented at the font-production layer.
+
+4. The font layer
+
+Decomposed Arabic fonts are not new. Type designers in Iran, among others, have used such methods for years, but the workflow has not been documented as a reusable standard. FFB aims to document the method and automate repetitive production tasks.
 
 The method divides a typeface into three layers:
 
-1. **Skeletons**: dotless base shapes, one per joining form.
-2. **Marks**: dots, diacritics and other marks, drawn once each.
-3. **Anchors**: named points on skeletons and marks that say where a mark attaches.
+4.1 Skeletons
 
-An encoded letter such as BEH is a *glyph with an empty outline*. At run time, GSUB replaces it with a skeleton plus a mark (for example `behDotless.init.skl` + `dotbelow.mrk.skl`). GPOS then places the mark using the anchors. Because dots are marks, the glyph count does not multiply with every dot-bearing letter.
+Skeletons are dotless base shapes, typically one per joining form. The naming convention is <letter>.<form>.skl, for example beh.init.skl. A letter with four joining forms may need up to four skeletons. Skeletons can also use additional axes in a variable font. Decomposition can continue into smaller components—for example, decomposing hah-ar.init into hahHead plus a kashida component—which can be useful in calligraphic type design.
 
-Because dots and diacritics are marks, the number of glyphs does not multiply with every letter that carries them: one skeleton plus one mark glyph covers every letter that shares them. A quantitative comparison with conventional (ligature-based) fonts is left for later, once the full set of contextual alternates has been designed.
+4.2 Marks
 
-## 5. What FFB does today
+Marks are dots, diacritics and other small components, drawn once and reused. The naming convention is <name>.<position>.mrk, for example dotbelow.mrk.skl. A mark can be placed on many skeletons without being duplicated.
 
-FFB reads a UFO source and generates feature code:
+4.3 Anchors
 
-| Output | Status |
-|---|---|
-| GSUB `isol`, `init`, `medi`, `fina` decomposition (from a table of letter → skeleton + marks) | working |
-| GPOS `mark` (mark-to-base) and `mkmk` (mark-to-mark) from anchors | working |
-| GPOS `curs` (cursive attachment) from `Ex`/`_Ex` anchors | working |
-| Synchronizing anchor coordinates in an existing feature file with the UFO | working (browser tool) |
-| Simple hand-written `kern` for non-joining letters | template only |
-| Contextual alternates (`calt`, `rclt`) | planned |
-| Automatic kerning and contextual mark shifts | planned |
+Anchors are named points on skeletons and marks that define attachment positions. The convention used by this project includes Tm (top-middle), Bm (bottom-middle), ring, sarkesh, bar, Ex and their underscore-prefixed counterparts.
 
-FFB depends on a naming convention (anchor names `Tm`, `Bm`, `ring`, `sarkesh`, `bar`, `Ex` and their `_` counterparts; `.skl` and `.mrk` glyph suffixes). It is not font-agnostic. Any font that follows the convention can use it, and the convention is documented in the user guide.
+An encoded letter such as BEH can be represented by a glyph with an empty outline. At shaping time, GSUB replaces it with a skeleton plus a mark—for example, behDotless.init.skl plus dotbelow.mrk.skl. GPOS then positions the mark using anchors.
 
-## 6. Limits and open questions
+Because dots and diacritics are reusable marks, the glyph inventory does not need to multiply for every letter that carries them: one skeleton plus one mark glyph can cover every letter that shares those components. A quantitative comparison with conventional fonts is deferred until the full set of contextual alternates has been designed.
 
-- **Behaviour in layout software.** The author's experience with decomposed fonts in Word and InDesign is mixed (font caching, spacing behaviour) and is still being investigated.
-- **Other scripts.** The author's hypothesis is that the skeleton/mark/anchor idea can help with other scripts that rely heavily on combining marks, such as Syriac or Thaana. Scripts with reordering and conjunct formation, such as Devanagari, Tamil, Myanmar or Sinhala, involve additional machinery (reordering, conjuncts) that FFB does not address. No work has been done on them.
-- **Language coverage.** The sample font covers Persian; Kurdish, Urdu, Pashto and Uyghur letters are planned.
-- **Validation.** The tool has been validated on one font family. Reports from other designers are the real test.
+4.4 Kashida and line justification
 
-## 7. Invitation
+Arabic line justification is not simply a matter of stretching spaces between words. JustyKatt follows a separation-of-responsibilities principle: the font supplies typographic resources, HarfBuzz performs shaping, and the justification engine decides how to use those resources.
 
-FFB is open source and intended for type designers who have the skill but not an engineering background. The aim is to turn the skeleton/mark/anchor method into something documented and shareable. Designers, engineers and users of Arabic-script type are invited to try it, report problems and extend it.
+The principal mechanisms available to a justifier are:
 
-## References
+Variable alternate forms. Select a suitable alternate and adjust its width through a variable-font axis. This is the first-priority mechanism in the current JustyKatt design.
 
-1. Whitecliffe University of Applied Sciences, "Typography is never neutral", 18 August 2025. https://whitecliffe.de/en/news/typography-is-never-neutral/ (reports 52 Arabic and 1,633 Latin families on Google Fonts, June 2025).
-2. J. Kew, "Encoding Arabic extensions: options for the future of Unicode", Unicode L2/03-044, 11 February 2003. https://www.unicode.org/L2/L2003/03044-arabic-ext-opt2.pdf
-3. J. Kew, K. Mansour, M. Davis, "Proposal to encode productive Arabic-script modifier marks", Unicode L2/03-154, 16 May 2003. https://www.unicode.org/L2/L2003/03154-gen-arabic-prop.pdf
-4. J. Kew, letter to the Unicode Technical Committee on the preliminary proposal to add nuqta characters to the Arabic block (L2/06-240), 19 July 2006. https://www.unicode.org/L2/L2006/06240-durrani.pdf
+Fixed alternate forms. Use calligraphic alternates that change the shape without continuously varying an axis—for example, a broken yeh or a toothless seen.
+
+Word-space adjustment. As a final, limited correction, slightly compress word spacing. The current design considers a small negative adjustment, with approximately −10% as an example ceiling rather than a universal rule.
+
+Kashida (tatweel) traditionally elongates connected letters without increasing the spaces between words. It is appropriate only where the letter connection and design permit it. In FFB’s decomposed structure, elongation can be applied to the skeleton while marks remain separate, which may help preserve their independent positioning.
+
+Possible implementation techniques include:
+
+Decomposing a character into a head component and an elongation component, then replacing the latter with wider alternatives or controlling it through a variable-font axis.
+
+Defining attachment points that specify where elongation begins and where the following skeleton resumes.
+
+Using GSUB substitutions to select suitable components or alternates.
+
+Using curs to attach connected components.
+
+Using mark and mkmk to maintain dot and diacritic placement as forms change.
+
+OpenType defines a JSTF table for justification-related behaviour. Support for it is limited or inconsistent across layout engines, so JustyKatt is designed to make justification decisions outside the font rather than depend on JSTF support. The actual set of usable features will depend on the font, shaping engine and host environment.
+
+The JustyKatt manifesto
+
+Line justification is not the font’s job; it is the text engine’s job.
+
+The font provides typographic resources. HarfBuzz shapes the text. JustyKatt measures, evaluates and chooses how to use the available resources.
+
+The manifesto has three practical consequences:
+
+Fonts provide capacity. They supply alternate forms, controlled variability and the information needed to preserve calligraphic structure.
+
+The justifier makes decisions. It measures line length, evaluates the font’s capabilities and chooses the location, type and amount of elongation.
+
+Beauty comes before mechanical correction. The system first uses calligraphic options, then applies restrained spacing adjustments if necessary.
+
+5. What FFB does today
+
+FFB reads a UFO source and generates OpenType feature code. The current status is summarized below.
+
+Output / capability
+
+Status
+
+GSUB decomposition: `isol`, `init`, `medi`, `fina` from letter-to-skeleton/mark mappings
+
+Working
+
+GPOS `mark` and `mkmk` from anchors
+
+Working
+
+GPOS `curs` from `Ex` / `_Ex` anchors
+
+Working
+
+Synchronizing anchor coordinates in an existing feature file with UFO anchors (browser tool)
+
+Working
+
+Simple hand-written `kern` for non-joining letters
+
+Template only
+
+Contextual alternates (`calt`, `rclt`) 
+
+Planned
+
+Automatic kerning and contextual mark shifts
+
+Planned
+
+Kashida resources and justification integration
+
+Planned
+
+FFB depends on a naming convention: anchor names such as Tm, Bm, ring, sarkesh, bar, Ex and their underscore-prefixed counterparts, plus .skl and .mrk glyph suffixes. It is not font-agnostic at the source level. A font that follows the convention can use the tool; the convention is documented in the user guide.
+
+6. Limits and open questions
+
+6.1 Behaviour in layout software
+
+The author’s experience with decomposed fonts in Word and InDesign is mixed, particularly around font caching and spacing behaviour. Issues under investigation include:
+
+Some layout engines may not treat GSUB-substituted glyphs as the original glyph when caching font data.
+
+Spacing and positioning may not be applied as expected after substitution.
+
+Search and text selection may refer to a skeleton glyph rather than the original encoded character.
+
+6.2 Other scripts
+
+The author’s working hypothesis is that the skeleton/mark/anchor model may also help scripts that rely heavily on combining marks, such as Syriac or Thaana. Scripts with reordering and conjunct formation—including Devanagari, Tamil, Myanmar and Sinhala—require additional mechanisms that FFB does not currently address. No implementation work has been done for these scripts.
+
+6.3 Language coverage
+
+The sample font is intended to cover nearly all languages written in Arabic script. Although the glyph inventory aims to include all Unicode-defined glyphs relevant to the project, practical coverage still requires testing.
+
+6.4 Validation
+
+The tool has been validated on one font family. Reports and tests from other designers will be an important measure of its generality.
+
+6.5 Line justification
+
+Justification behaviour depends on the font’s resources, HarfBuzz shaping behaviour, and the host rendering environment. The proposed workflow and its effectiveness across browsers and desktop layout applications still require systematic testing.
+
+7. Invitation
+
+FFB is open source and intended for type designers who have the skill but may not have an engineering background. Its goal is to make the skeleton/mark/anchor workflow documented, repeatable and shareable. Designers, engineers and users of Arabic-script type are invited to try it, report issues and extend it.
+
+References
+
+1. Whitecliffe University of Applied Sciences, “Typography is never neutral,” 18 August 2025. Reports 52 Arabic and 1,633 Latin families on Google Fonts in June 2025. Source
+
+2. J. Kew, “Encoding Arabic extensions: options for the future of Unicode,” Unicode L2/03-044, 11 February 2003. Source
+
+3. J. Kew, K. Mansour and M. Davis, “Proposal to encode productive Arabic-script modifier marks,” Unicode L2/03-154, 16 May 2003. Source
+
+4. J. Kew, letter to the Unicode Technical Committee on the preliminary proposal to add nuqta characters to the Arabic block (L2/06-240), 19 July 2006. Source
