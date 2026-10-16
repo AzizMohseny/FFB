@@ -1,88 +1,86 @@
-<div dir="rtl">
+# FFB User Guide
 
-# راهنمای استفاده از FFB
+This guide is for a type designer who has designed skeletons and marks in a UFO and wants the features to be generated mechanically. No programming knowledge is required. There are three paths; start with the simplest.
 
-این راهنما برای طراح فونتی است که اسکلت‌ها و علامت‌ها را در یک UFO طراحی کرده و می‌خواهد فیچرها را ماشین بسازد. نیازی به دانش برنامه‌نویسی نیست. سه مسیر وجود دارد؛ از ساده‌ترین شروع کنید.
+## 1. Before anything else: the FFB convention
 
-## ۱. قبل از هر کاری: فونت شما باید قرارداد FFB را رعایت کند
+FFB reads names. If names do not match the convention, the program will find nothing or will error out. If your font matches the reference font, all capabilities available in FFB will be used.
 
-FFB اسم‌ها را می‌خواند. اگر اسم‌ها با قرارداد نخواند، برنامه چیزی پیدا نمی‌کند یا خطا می‌دهد.
+**Glyph names**
 
-**اسم گلیف‌ها**
-
-| نوع | قالب | مثال |
+| Type | Format | Example |
 |---|---|---|
-| حرف کدگذاری‌شده (خالی) | `نام-ar` | `beh-ar` |
-| اسکلت | `نام.فرم.skl` (فرم: isol، init، medi، fina) | `behDotless.init.skl` |
-| علامت | `نام.mrk` (در خروجی‌های قدیمی‌تر `نام.mrk.skl`) | `dotbelow.mrk` |
+| Encoded letter (empty) | `name-ar` | `beh-ar` |
+| Skeleton | `name.form.skl` (form: isol, init, medi, fina) | `behDotless.init.skl` |
+| Mark | `name.mrk` (in older outputs `name.mrk.skl`) | `dotbelow.mrk` |
 
-علامت‌ها را مولدهای GPOS از روی انکر `_` تشخیص می‌دهند، نه از روی پسوند اسم؛ پسوند فقط برای خوانایی است.
+Marks are recognized by the GPOS generators from their `_` anchor, not from the name suffix; the suffix is only for readability.
 
-**اسم انکرها**
+**Anchor names**
 
-| انکر | کجا | معنی |
+| Anchor | Where | Meaning |
 |---|---|---|
-| `Tm` / `_Tm` | پایه / علامت | علامت بالا |
-| `Bm` / `_Bm` | پایه / علامت | علامت پایین |
-| `ring` / `_ring` | پایه / علامت | حلقه |
-| `sarkesh` / `_sarkesh` | پایه / علامت | سرکش (گاف) |
-| `bar` / `_bar` | پایه / علامت | خط |
-| `Ex` / `_Ex` | اسکلت | اتصال کشیده: خروج و ورود |
+| `T` / `_T` | base / mark | top mark |
+| `B` / `_B` | base / mark | bottom mark |
+| `R` / `_R` | base / mark | ring |
+| `S` / `_S` | base / mark | sarkesh (gaf) |
+| `D` / `_D` | base / mark | bar |
+| `E` / `_E` | skeleton | cursive attachment: exit and entry |
 
-قواعد:
+Rules:
 
-- انکرِ **علامت** با `_` شروع می‌شود و انکرِ **پایه** بدون `_` است. جفت‌ها باید هم‌نام باشند.
-- علامتی که هم `_Bm` و هم `Bm` دارد، خودش میزبان علامت دیگر است و به `mkmk` می‌رود.
-- اتصال کشیده: `init` فقط `Ex` دارد؛ `medi` هر دو؛ `fina` فقط `_Ex`؛ `isol` هیچ‌کدام.
-- حروف غیرچسبان (الف، دال، ر، واو، ژ...) فقط `isol` و `fina` دارند.
+- A **mark** anchor starts with `_`, a **base** anchor does not. Paired anchors must share the same name.
+- A mark that has both `_B` and `B` is itself a host for another mark and goes to `mkmk`.
+- Cursive attachment: `init` has only `E`; `medi` has both; `fina` has only `_E`; `isol` has neither.
+- Non-joining letters (alef, dal, re, waw, zhe, ...) have only `isol` and `fina`.
 
-**فونتلب** هنگام باز کردن فایل اسم انکرها را عوض می‌کند (مثلاً `t.dotbelow.mrk.skl`). برنامه `normalize_anchors.py` این اسم‌ها را به اسم‌های بالا برمی‌گرداند و `ffb.py` آن را خودکار اجرا می‌کند. اسم‌های تک‌حرفی `T/B/D/R/S` و شکل‌هایی مثل `_T.mrk` هم شناخته می‌شوند (`T`→`Tm`، `B`→`Bm`، `D`→`bar`، `R`→`ring`، `S`→`sarkesh`). اگر یک گلیف بعد از تغییر نام دو انکر هم‌نام پیدا کند، دومی حذف می‌شود و اگر مختصاتشان فرق داشته باشد هشدار می‌دهد.
+**FontLab** renames anchors when opening a file (for example `t.dotbelow.mrk.skl`). The script `normalize_anchors.py` restores these names to the ones above, and `ffb.py` runs it automatically. Single-letter names `T/B/D/R/S` and forms like `_T.mrk` are also recognized (`T`→`Tm`, `B`→`Bm`, `D`→`bar`, `R`→`ring`, `S`→`sarkesh`). If a glyph ends up with two anchors of the same name after renaming, the second is removed, and if their coordinates differ, a warning is issued.
 
-## ۲. مسیر الف (بدون نصب): ابزار همگام‌سازی انکرها
+## 2. Path A (no installation): anchor sync tool
 
-برای وقتی که فیچر GPOS دارید و فقط مختصات انکرها در UFO عوض شده است. این ابزار مختصات `mark` و `mkmk` و `curs` را به‌روز می‌کند و اسم‌های فونتلب مثل `t.fatha.mrk` و `_T.mrk` و `T/B/D/R/S` را هم می‌شناسد. در گزارش آخر می‌بینید چه چیزهایی در UFO پیدا نشد.
+For when you already have a GPOS feature and only the anchor coordinates in the UFO have changed. This tool updates the coordinates of `mark`, `mkmk` and `curs`, and recognizes FontLab names like `t.fatha.mrk`, `_T.mrk` and `T/B/D/R/S`. The final report shows what was not found in the UFO.
 
-1. فایل `tools/anchor_sync_tool.html` را با مرورگر باز کنید. فقط بار اول اینترنت لازم است.
-2. پوشه UFO را zip کنید (کل پوشه `.ufo`) و در صفحه رها کنید.
-3. گزارش را ببینید: چند انکر عوض شد و چه چیزهایی پیدا نشد.
-4. روی «کپی همه» بزنید یا متن کادر را کپی کنید.
-5. در فونتلب، پنل فیچرها را باز کنید، فیچر قدیمی `mark`/`mkmk` را پاک کنید و متن جدید را بچسبانید. پیست‌کردن اسم انکرها را عوض نمی‌کند، چون فقط عدد و اسم گلیف است.
+1. Open `tools/anchor_sync_tool.html` in a browser. Internet is needed only the first time.
+2. Zip the UFO folder (the whole `.ufo` folder) and drop it on the page.
+3. Read the report: how many anchors were changed and what was not found.
+4. Click "Copy all" or copy the text from the box.
+5. In FontLab, open the features panel, delete the old `mark`/`mkmk` feature and paste the new text. Pasting does not rename anchors, because the text contains only numbers and glyph names.
 
-## ۳. مسیر ب: ساخت کامل فونت از UFO با یک دستور
+## 3. Path B: full font build with one command
 
-این مسیر GSUB و GPOS را می‌سازد و فایل `.otf` می‌دهد. یک بار نصب لازم است و بعد از آن یک خط دستور.
+This path builds GSUB and GPOS and produces an `.otf` file. One-time installation, then a single command line.
 
-نصب (فقط بار اول):
+**Installation (first time only):**
 
-1. پایتون ۳ را از python.org نصب کنید. در ویندوز تیک «Add Python to PATH» را بزنید.
-2. در ترمینال (در ویندوز Command Prompt): `pip install fonttools`
+1. Install Python 3 from python.org. On Windows, tick "Add Python to PATH".
+2. In a terminal (on Windows, Command Prompt): `pip install fonttools`
 
-ساخت فونت:
+**Build the font:**
 
 ```
 python src/ffb.py MyFont.ufo --out build
 ```
 
-`MyFont.ufo` می‌تواند پوشه یا فایل zip باشد. در پوشه `build` این‌ها ساخته می‌شود:
+`MyFont.ufo` can be a folder or a zip file. The `build` folder will contain:
 
-| فایل | محتوا |
+| File | Contents |
 |---|---|
-| `MyFont.otf` | فونت نهایی |
-| `gsub.fea` | isol، init، medi، fina |
-| `gpos_mark.fea` | mark و mkmk |
+| `MyFont.otf` | final font |
+| `gsub.fea` | isol, init, medi, fina |
+| `gpos_mark.fea` | mark and mkmk |
 | `gpos_curs.fea` | curs |
-| `decompose_table.yaml` | جدول «حرف ← اسکلت + علامت» |
-| `*.normalized.ufo` | UFO با اسم‌های انکر اصلاح‌شده |
+| `decompose_table.yaml` | "letter → skeleton + mark" table |
+| `*.normalized.ufo` | UFO with normalized anchor names |
 
-اگر جدول تجزیه را دستی ویرایش کرده‌اید: `--table my_table.yaml` را اضافه کنید. فیچرهای دیگر (مثلاً kern) را با `--extra-fea kern.fea` اضافه کنید.
+If you have edited the decomposition table by hand: add `--table my_table.yaml`. Add other features (e.g. kern) with `--extra-fea kern.fea`.
 
-## ۴. مسیر ج: فقط فایل‌های fea برای فونتلب
+## 4. Path C: only .fea files for FontLab
 
-فایل‌های `build/gsub.fea` و `build/gpos_mark.fea` و `build/gpos_curs.fea` را جداگانه در فونتلب (یا ابزار دیگر) بچسبانید و خودتان فونت را بسازید.
+Paste `build/gsub.fea`, `build/gpos_mark.fea` and `build/gpos_curs.fea` separately into FontLab (or another tool) and build the font yourself.
 
-## ۵. جدول تجزیه (چه حرفی به چه اسکلتی و چه علامتی)
+## 5. Decomposition table (which letter goes to which skeleton and which mark)
 
-فایل `examples/decompose_table.example.yaml` نمونه است. هر حرف یک ورودی دارد:
+The file `examples/decompose_table.example.yaml` is a sample. Each letter has one entry:
 
 ```
 noon-ar:
@@ -92,38 +90,70 @@ noon-ar:
   fina: [noon.fina.skl, dotabove.mrk.skl]
 ```
 
-برای زبان جدید (کردی، اردو، پشتو، اویغوری) حروف جدید را در همین جدول اضافه کنید. اسکلت و علامت باید در UFO وجود داشته باشند.
+For a new language (Kurdish, Urdu, Pashto, Uyghur), add the new letters to this table. The skeleton and mark must exist in the UFO. The reference font contains all glyphs related to the languages of the Arabic script, and a font prepared on its basis supports all languages of this script. (All Unicode codes are included, but this requires testing and debugging.)
 
-## ۶. کرنینگ ساده (غیرچسبان‌ها)
+## 6. Simple kerning (non-joining letters)
 
-قالب `templates/simple_kern_template.fea` را ببینید. هر خط یک قاعده است:
+See the template `templates/simple_kern_template.fea`. Each line is one rule:
 
 ```
 pos alef.fina.skl dotbelow.mrk <100 -30 0 0>;
 ```
 
-- ترتیب: **اول اسکلت، بعد علامت.** ترتیب برعکس هرگز اعمال نمی‌شود.
-- چهار عدد به ترتیب xPlacement، yPlacement، xAdvance، yAdvance هستند. برای جابه‌جایی علامت معمولاً فقط دو عدد اول را عوض می‌کنید.
-- نام فیچر `kern` است.
+- Order: **skeleton first, mark second.** The reverse order is never applied.
+- The four numbers are, in order: xPlacement, yPlacement, xAdvance, yAdvance. To shift a mark, you usually change only the first two.
+- The feature name is `kern`.
 
-## ۷. مشکلات رایج
+### Advanced kerning: context-dependent shifting
 
-| علامت | علت و راه‌حل |
+The reference font provides a sample of advanced kerning for dots. This sample shows how a mark can be shifted only in a specific context. The three lookups below are defined **before** `feature kern` and called **inside** it:
+
+```
+lookup shiftThreeDotsLeft {
+    pos @below' <-100 0 0 0>;
+} shiftThreeDotsLeft;
+
+lookup contextShiftThreeDots {
+    pos reh.isol.skl behDotless.init.skl @below' lookup shiftThreeDotsLeft;
+} contextShiftThreeDots;
+
+lookup contextShiftAbove {
+    pos dotabove.mrk behDotless.init.skl @below' lookup shiftThreeDotsLeft;
+} contextShiftAbove;
+
+feature kern {
+    # simple kerning rules
+    pos alef.fina.skl dotbelow.mrk <100 -30 0 0>;
+
+    # call context-dependent lookups
+    lookup contextShiftThreeDots;
+    lookup contextShiftAbove;
+} kern;
+```
+
+- `shiftThreeDotsLeft` performs the shift itself (100 units to the left).
+- `contextShiftThreeDots` says this shift should only be applied when `reh.isol.skl` and `behDotless.init.skl` precede the `@below` mark.
+- `contextShiftAbove` does the same for the `dotabove.mrk` context.
+
+You can repeat this pattern for any letter-and-mark combination you need.
+
+## 7. Common problems
+
+| Symptom | Cause and solution |
 |---|---|
-| خطای `Glyph ... already defined` | یک علامت دو بار در یک کلاس تعریف شده یا دو انکر هم‌نام دارد (مثلاً دو `_Tm`). در UFO یکی را پاک کنید. |
-| علامتی هیچ‌جا نمی‌نشیند | انکرش `_` ندارد یا اسم پایه‌اش با اسم علامت نمی‌خواند. فایل `gpos_mark.fea` را بازکنید و ببینید آن گلیف هست یا نه. |
-| بعد از باز کردن در فونتلب انکرها اسم دیگری دارند | `normalize_anchors.py` را اجرا کنید (با `ffb.py` خودکار است). |
-| فونت نصب نمی‌شود («valid font نیست») | فونت‌های CFF باید `OTTO` باشند. `build_otf.py` این را درست می‌کند. |
-| ورد یا ایندیزاین فونت قدیمی را نشان می‌دهد | حافظه نهان فونت. نام داخلی فونت را عوض کنید، یا فونت را حذف کنید و دوباره نصب کنید و برنامه را ببندید و باز کنید. |
-| `curs` خالی است | انکرهای `Ex`/`_Ex` در UFO نیستند. |
-| فونت ساخته‌شده حروف را شکل نمی‌دهد | بررسی کنید فیچرهای isol/init/medi/fina در `.otf` هستند (در FontTools یا فونتلب). |
+| Error `Glyph ... already defined` | A mark is defined twice in one class, or two anchors share a name (e.g. two `_Tm`). Delete one in the UFO. |
+| A mark does not attach anywhere | Its anchor has no `_`, or its base name does not match the mark name. Open `gpos_mark.fea` and check whether the glyph is there. |
+| After opening in FontLab, anchors have different names | Run `normalize_anchors.py` (automatic with `ffb.py`). |
+| Font does not install ("not a valid font") | CFF fonts must be `OTTO`. `build_otf.py` fixes this. |
+| Word or InDesign shows the old font | Font cache. Rename the font's internal name, or uninstall the font and reinstall it, then close and reopen the application. |
+| `curs` is empty | `Ex`/`_Ex` anchors are missing in the UFO. |
+| The built font does not shape letters | Check that the isol/init/medi/fina features are in the `.otf` (using FontTools or FontLab). |
+| `fatal error` in the `kern` feature | Lookups must be defined **before** `feature kern` and called **inside** it. If they are called outside the feature, FontLab raises an error. |
 
-## ۸. چه چیزی هنوز خودکار نیست
+## 8. What is not yet automated
 
-- `calt` و `rclt` (جایگزینی‌های وابسته به زمینه)
-- کرنینگ خودکار و جابه‌جایی علامت وابسته به زمینه
-- رفتار کامل در ورد و ایندیزاین هنوز برای همه فونت‌ها تضمین نشده است.
+- `calt` and `rclt` (context-dependent substitutions)
+- Automatic kerning and context-dependent mark shifting
+- Full behaviour in Word and InDesign is not yet guaranteed for all fonts.
 
-برای گزارش مشکل، در گیت‌هاب یک issue باز کنید و فایل UFO کوچک یا لیست گلیف‌ها را ضمیمه کنید.
-
-</div>
+To report a problem, open an issue on GitHub and attach a small UFO or a list of glyphs.
