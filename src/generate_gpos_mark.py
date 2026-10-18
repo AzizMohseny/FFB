@@ -27,6 +27,12 @@ from pathlib import Path
 
 from fontTools.ufoLib.glifLib import GlyphSet
 
+try:  # same folder: accept FontLab-style names even if the UFO was not normalized
+    from normalize_anchors import normalize_name
+except ImportError:  # pragma: no cover
+    def normalize_name(name):
+        return name
+
 
 class _AnchorCollector:
     def __init__(self):
@@ -54,11 +60,23 @@ def scan_anchors(ufo_path: Path):
         collector = _AnchorCollector()
         gs.readGlyph(glyph_name, collector)
         if collector.anchors:
-            result[glyph_name] = collector.anchors
+            # Normalize here too, so "E" / "_E" (cursive) never leak into
+            # mark/mkmk as an ordinary slot, and "T.mrk" is read as "Tm".
+            # Duplicates produced by renaming keep the first coordinate.
+            seen, anchors = set(), []
+            for a in collector.anchors:
+                a = dict(a)
+                if a.get("name"):
+                    a["name"] = normalize_name(a["name"])
+                if a.get("name") in seen:
+                    continue
+                seen.add(a.get("name"))
+                anchors.append(a)
+            result[glyph_name] = anchors
     return result
 
 
-CURSIVE_NAMES = {"Ex"}  # handled by a separate curs generator, skip here
+CURSIVE_NAMES = {"Ex", "E"}  # handled by a separate curs generator, skip here
 
 
 def build_mark_data(per_glyph: dict):
