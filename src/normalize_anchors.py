@@ -66,6 +66,10 @@ MARK_SIDE_RULES = [
 EXTRA_MARK_RULES = [
     (re.compile(r"^_T\.(?:mrk|mek)((?:_\d+)*)$"), r"_Tm\1"),
     (re.compile(r"^_B\.(?:mrk|mek)((?:_\d+)*)$"), r"_Bm\1"),
+    # Host side of mark-to-mark stacking: "T.mrk" / "B.mrk" on a mark glyph is
+    # the point where ANOTHER mark sits, i.e. the plain slot "Tm" / "Bm".
+    (re.compile(r"^T\.(?:mrk|mek)((?:_\d+)*)$"), r"Tm\1"),
+    (re.compile(r"^B\.(?:mrk|mek)((?:_\d+)*)$"), r"Bm\1"),
 ]
 
 # Single-letter slot names from FontLab-generated feature code:
