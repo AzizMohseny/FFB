@@ -210,6 +210,9 @@ const MARK_SIDE_RULES = BASE_RULES.map(([re, r]) => [new RegExp('^_' + re.source
 const EXTRA_MARK_RULES = [
   [/^_T\.(?:mrk|mek)((?:_\d+)*)$/, '_Tm$1'],
   [/^_B\.(?:mrk|mek)((?:_\d+)*)$/, '_Bm$1'],
+  // host side of mark-to-mark stacking
+  [/^T\.(?:mrk|mek)((?:_\d+)*)$/, 'Tm$1'],
+  [/^B\.(?:mrk|mek)((?:_\d+)*)$/, 'Bm$1'],
 ];
 const SLOT_LETTER_RULES = [];
 for (const [letter, slot] of [['T', 'Tm'], ['B', 'Bm'], ['D', 'bar'], ['R', 'ring'], ['S', 'sarkesh']]) {
@@ -244,6 +247,11 @@ async function buildAnchorMap(zip) {
   return map;
 }
 
+// class name -> [attach anchor, host anchor]; the host is NEVER the attach anchor
+function attachHost(cls) {
+  return cls.startsWith('_') ? [cls, cls.slice(1)] : ['_' + cls, cls];
+}
+
 function lookupAnchor(anchorMap, glyph, name) {
   return anchorMap.get(glyph + "\u0000" + name)
       || anchorMap.get(glyph + "\u0000" + CANON + normalizeName(name));
@@ -258,18 +266,20 @@ function syncFeaText(text, anchorMap) {
   let updated = 0;
   const missing = [];
 
-  const markClassRe = /(markClass\s+(\S+)\s+<anchor\s+)(-?\d+)\s+(-?\d+)(>\s*@(\w+)\s*;)/g;
+  const markClassRe = /(markClass\s+(\S+)\s+<anchor\s+)(-?\d+)\s+(-?\d+)(>\s*@([\w.\-]+)\s*;)/g;
   text = text.replace(markClassRe, (m, prefix, glyph, ox, oy, suffix, slot) => {
-    const a = lookupAnchor(anchorMap, glyph, "_" + slot);
-    if (!a) { missing.push(glyph + " : _" + slot); return m; }
+    const attach = attachHost(slot)[0];
+    const a = lookupAnchor(anchorMap, glyph, attach);
+    if (!a) { missing.push(glyph + " : " + attach); return m; }
     updated++;
     return prefix + Math.round(a.x) + " " + Math.round(a.y) + suffix;
   });
 
-  const posBaseRe = /(pos\s+(?:base|mark)\s+(\S+)\s+<anchor\s+)(-?\d+)\s+(-?\d+)(>\s*mark\s*@(\w+))/g;
+  const posBaseRe = /(pos\s+(?:base|mark)\s+(\S+)\s+<anchor\s+)(-?\d+)\s+(-?\d+)(>\s*mark\s*@([\w.\-]+))/g;
   text = text.replace(posBaseRe, (m, prefix, glyph, ox, oy, suffix, slot) => {
-    const a = lookupAnchor(anchorMap, glyph, slot);
-    if (!a) { missing.push(glyph + " : " + slot); return m; }
+    const host = attachHost(slot)[1];
+    const a = lookupAnchor(anchorMap, glyph, host);
+    if (!a) { missing.push(glyph + " : " + host); return m; }
     updated++;
     return prefix + Math.round(a.x) + " " + Math.round(a.y) + suffix;
   });
