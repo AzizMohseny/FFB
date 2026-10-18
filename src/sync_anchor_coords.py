@@ -83,11 +83,11 @@ def _lookup(ufo_anchors, glyph, name):
 
 # Matches: markClass <glyph> <anchor X Y> @<slot>;
 MARKCLASS_RE = re.compile(
-    r'(markClass\s+(\S+)\s+<anchor\s+)(-?\d+)\s+(-?\d+)(>\s*@(\w+)\s*;)'
+    r'(markClass\s+(\S+)\s+<anchor\s+)(-?\d+)\s+(-?\d+)(>\s*@([\w.\-]+)\s*;)'
 )
 # Matches: pos base <glyph> <anchor X Y> mark @<slot>   OR   pos mark <glyph> <anchor X Y> mark @<slot>
 POSBASE_RE = re.compile(
-    r'(pos\s+(?:base|mark)\s+(\S+)\s+<anchor\s+)(-?\d+)\s+(-?\d+)(>\s*mark\s*@(\w+))'
+    r'(pos\s+(?:base|mark)\s+(\S+)\s+<anchor\s+)(-?\d+)\s+(-?\d+)(>\s*mark\s*@([\w.\-]+))'
 )
 
 
@@ -101,6 +101,19 @@ ENTRY_NAMES = ("_Ex", "_E")   # entry = where the previous letter connects (righ
 EXIT_NAMES = ("Ex", "E")      # exit  = where the next letter connects (left edge in RTL)
 
 
+def attach_and_host_names(cls: str):
+    """Class name -> (attach anchor, host anchor).
+
+    "T"      -> ("_T",     "T")
+    "_T.mrk" -> ("_T.mrk", "T.mrk")
+    The host anchor is NEVER the attach anchor: markClass uses the first,
+    `pos base` / `pos mark` use the second.
+    """
+    if cls.startswith("_"):
+        return cls, cls[1:]
+    return "_" + cls, cls
+
+
 def sync_fea_text(fea_text: str, ufo_anchors: dict):
     updated_count = 0
     missing = []
@@ -108,8 +121,9 @@ def sync_fea_text(fea_text: str, ufo_anchors: dict):
     def repl_markclass(m):
         nonlocal updated_count
         prefix, glyph, old_x, old_y, suffix, slot = m.groups()
-        key = (glyph, f"_{slot}")
-        xy = _lookup(ufo_anchors, glyph, f"_{slot}")
+        attach, _host = attach_and_host_names(slot)
+        key = (glyph, attach)
+        xy = _lookup(ufo_anchors, glyph, attach)
         if xy is None:
             missing.append(key)
             return m.group(0)
@@ -120,8 +134,9 @@ def sync_fea_text(fea_text: str, ufo_anchors: dict):
     def repl_posbase(m):
         nonlocal updated_count
         prefix, glyph, old_x, old_y, suffix, slot = m.groups()
-        key = (glyph, slot)
-        xy = _lookup(ufo_anchors, glyph, slot)
+        _attach, host = attach_and_host_names(slot)
+        key = (glyph, host)
+        xy = _lookup(ufo_anchors, glyph, host)
         if xy is None:
             missing.append(key)
             return m.group(0)
