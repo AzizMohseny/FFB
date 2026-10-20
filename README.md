@@ -80,6 +80,7 @@ Roadmap items that follow from this:
 - **Working:** FFB core for Arabic (`isol`, `init`, `medi`, `fina`, `mark`, `mkmk`).
 - **In development:** `calt`, `rclt`, `jalt`, `falt`, and automatic kerning.
 - **Design phase:** JustyKhatt, the JavaScript library for kashida-based line justification.
+For detailed technical documentation on the architecture of JustyKhatt, please refer to [Architecture Details](docs/ARCHITECTURE.md).
 
 **Limitation:** the justification approach relies on browser shaping (HarfBuzz) and has not been tested on other engines.
 
