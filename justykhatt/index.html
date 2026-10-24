@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>JustyKhatt Test Environment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="controls">
+        <label for="width-slider">طول هدف (px): </label>
+        <input type="range" id="width-slider" min="300" max="1500" value="800">
+        <span id="width-val">800</span>
+        
+        <label for="mode-select">حالت جاستیفای:</label>
+        <select id="mode-select">
+            <option value="normal">نرمال (Normal)</option>
+            <option value="artistic">هنری (Artistic)</option>
+        </select>
+        
+        <button id="justify-btn">اجرای جاستیفای</button>
+    </div>
+
+    <div id="editor" contenteditable="true" spellcheck="false"></div>
+
+    <!-- بارگذاری اسکریپت‌ها -->
+    <script src="packs/arabic/base/config.js"></script>
+    <script src="core/lineAnalyzer.js"></script>
+    <script src="core/measure.js"></script>
+    <script src="packs/arabic/base/kit.js"></script>
+    <script src="core/tagger.js"></script>
+    <script src="core/ffb-caps.js"></script>
+    <script src="packs/arabic/base/normal.js"></script>
+    <script src="packs/arabic/base/artistic.js"></script>
+    <script src="core/renderer.js"></script>
+    <script src="core/runtime.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            window.JustyConfig = window.BaseNormalConfig;
+
+            const slider = document.getElementById("width-slider");
+            const widthVal = document.getElementById("width-val");
+            const editor = document.getElementById("editor");
+            const justifyBtn = document.getElementById("justify-btn");
+            const modeSelect = document.getElementById("mode-select");
+
+            editor.textContent = "ببینید این متن چطور کشیده می‌شود";
+
+            editor.addEventListener("paste", (e) => {
+                e.preventDefault();
+                const text = (e.clipboardData || window.clipboardData).getData("text/plain");
+                document.execCommand("insertText", false, text);
+            });
+
+            function runJustyKhatt() {
+                const T = parseInt(slider.value, 10);
+                const mode = modeSelect.value;
+                const artistic = mode === "artistic";
+                
+                const pack = artistic ? window.ArtisticRulePack : window.BaseNormalRulePack;
+                if (!pack) {
+                    console.error("Pack not found:", mode);
+                    return;
+                }
+
+                const tols = artistic ? [0.05, 0] : [0];
+                let commands;
+                
+                for (const tol of tols) {
+                    window.RendererEngine.clear(editor);
+                    editor.style.width = (T * (1 + tol)) + "px";
+                    
+                    const analysis = window.LineAnalyzerEngine.analyzeLines(editor);
+                    const widths = window.ArabicKit.lineWidths(analysis.words);
+                    const remaining = {};
+                    for (const k in widths) remaining[k] = T - widths[k];
+                    
+                    const tagData = window.TaggerEngine.tagText(analysis.words, window.JustyConfig);
+                    
+                    // لاگ برای بررسی اینکه آیا سواش‌ها پیدا می‌شوند یا نه
+                    console.log("Mode:", mode);
+                    console.log("Swash Opportunities:", tagData.swashes.length);
+                    
+                    commands = pack.generateCommands(tagData, analysis.lines, remaining, { targetWidth: T });
+                    
+                    if (!commands.infeasible) break;
+                }
+                
+                editor.style.width = T + "px";
+                window.RendererEngine.applyCommands(editor, commands);
+            }
+
+            justifyBtn.addEventListener("click", runJustyKhatt);
+
+            slider.addEventListener("input", (event) => {
+                const newWidth = Number(event.target.value);
+                widthVal.textContent = newWidth;
+                editor.style.width = newWidth + "px";
+            });
+
+            window.JustyRuntime.start(editor, runJustyKhatt);
+        });
+    </script>
+</body>
+</html>
