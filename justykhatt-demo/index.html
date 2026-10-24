@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>JustyKhatt Test Environment</title>
+    
+    <!-- پیش‌بارگذاری فونت برای جلوگیری از تاخیر -->
     <link rel="preload" href="fonts/FFB_Master-VF.ttf" as="font" type="font/ttf" crossorigin>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -24,6 +27,7 @@
 
     <div id="editor" contenteditable="true" spellcheck="false"></div>
 
+    <!-- بارگذاری اسکریپت‌ها -->
     <script src="packs/arabic/base/config.js"></script>
     <script src="core/lineAnalyzer.js"></script>
     <script src="core/measure.js"></script>
@@ -59,7 +63,10 @@
                 const artistic = mode === "artistic";
                 
                 const pack = artistic ? window.ArtisticRulePack : window.BaseNormalRulePack;
-                if (!pack) return;
+                if (!pack) {
+                    console.error("Pack not found:", mode);
+                    return;
+                }
 
                 const tols = artistic ? [0.05, 0] : [0];
                 let commands;
@@ -91,16 +98,11 @@
                 editor.style.width = newWidth + "px";
             });
 
-            // *** اجرای همه چیز فقط بعد از لود کامل فونت ***
+            // *** راه‌حل اصلی: منتظر لود شدن فونت بمان و بعد اجرا کن ***
             document.fonts.ready.then(() => {
-                console.log("Fonts loaded successfully. Starting JustyKhatt...");
+                console.log("Fonts loaded, starting JustyKhatt...");
                 window.JustyRuntime.start(editor, runJustyKhatt);
-                runJustyKhatt();
-            }).catch((err) => {
-                console.error("Font loading failed:", err);
-                // اگر فونت لود نشد، به هر حال اجرا کن تا لااقل خطا را ببینیم
-                window.JustyRuntime.start(editor, runJustyKhatt);
-                runJustyKhatt();
+                runJustyKhatt(); // اجرای اولیه بعد از لود فونت
             });
         });
     </script>
