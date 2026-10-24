@@ -1,0 +1,41 @@
+@font-face {
+    font-family: 'FFBMaster'; 
+    src: url('fonts/FFB_Master-VF.ttf') format('truetype'); 
+}
+
+body {
+    font-family: Tahoma, sans-serif;
+    margin: 20px;
+    direction: rtl;
+    background-color: #f0f2f5;
+}
+
+.controls {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#editor {
+    width: 800px; /* عرض اولیه */
+    min-height: 150px;
+    background-color: white;
+    border: 2px dashed #666;
+    padding: 20px;
+    box-shadow: inset 2px 0 0 red;
+    transition: width 0.1s;
+    overflow: hidden;
+    
+    font-family: 'FFBMaster', sans-serif !important;
+    font-size: 70px;
+    line-height: 1.4;
+    white-space: pre-wrap; 
+}
+
+.stretch-target {
+    display: inline-block;
+}
