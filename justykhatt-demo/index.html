@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>JustyKhatt Test Environment</title>
+    
+    <!-- پیش‌بارگذاری فونت برای جلوگیری از تاخیر -->
+    <link rel="preload" href="fonts/FFB_Master-VF.ttf" as="font" type="font/ttf" crossorigin>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -77,11 +81,6 @@
                     for (const k in widths) remaining[k] = T - widths[k];
                     
                     const tagData = window.TaggerEngine.tagText(analysis.words, window.JustyConfig);
-                    
-                    // لاگ برای بررسی اینکه آیا سواش‌ها پیدا می‌شوند یا نه
-                    console.log("Mode:", mode);
-                    console.log("Swash Opportunities:", tagData.swashes.length);
-                    
                     commands = pack.generateCommands(tagData, analysis.lines, remaining, { targetWidth: T });
                     
                     if (!commands.infeasible) break;
@@ -99,7 +98,12 @@
                 editor.style.width = newWidth + "px";
             });
 
-            window.JustyRuntime.start(editor, runJustyKhatt);
+            // *** راه‌حل اصلی: منتظر لود شدن فونت بمان و بعد اجرا کن ***
+            document.fonts.ready.then(() => {
+                console.log("Fonts loaded, starting JustyKhatt...");
+                window.JustyRuntime.start(editor, runJustyKhatt);
+                runJustyKhatt(); // اجرای اولیه بعد از لود فونت
+            });
         });
     </script>
 </body>
